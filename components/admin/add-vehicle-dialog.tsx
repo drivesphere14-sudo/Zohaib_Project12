@@ -27,8 +27,7 @@ export function AddVehicleDialog() {
     description: "",
     image_url: "",
     features: "",
-    gps_device_id: "",
-    iot_device_id: "",
+    firebase_url: "",
   })
 
   function updateField(field: string, value: string) {
@@ -50,8 +49,7 @@ export function AddVehicleDialog() {
       features: form.features
         ? form.features.split(",").map((f) => f.trim())
         : [],
-      gps_device_id: form.gps_device_id || null,
-      iot_device_id: form.iot_device_id || null,
+      firebase_url: form.firebase_url || null,
     })
 
     if (error) {
@@ -67,8 +65,7 @@ export function AddVehicleDialog() {
         description: "",
         image_url: "",
         features: "",
-        gps_device_id: "",
-        iot_device_id: "",
+        firebase_url: "",
       })
       router.refresh()
     }
@@ -183,31 +180,24 @@ export function AddVehicleDialog() {
             />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-foreground">
-                GPS Device ID
-              </label>
-              <input
-                type="text"
-                value={form.gps_device_id}
-                onChange={(e) => updateField("gps_device_id", e.target.value)}
-                placeholder="GPS-001"
-                className="rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-foreground">
-                IoT Device ID
-              </label>
-              <input
-                type="text"
-                value={form.iot_device_id}
-                onChange={(e) => updateField("iot_device_id", e.target.value)}
-                placeholder="IOT-001"
-                className="rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-semibold text-foreground">
+              Firebase URL (for GPS &amp; IoT)
+            </label>
+            <input
+              type="url"
+              value={form.firebase_url}
+              onChange={(e) => updateField("firebase_url", e.target.value)}
+              placeholder="https://gsptracker-57beb-default-rtdb.firebaseio.com"
+              className="rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            <p className="text-xs text-muted-foreground">
+              Leave blank for vehicles without hardware. For the car with the device
+              installed now, use the base URL with no sub-path
+              (https://gsptracker-57beb-default-rtdb.firebaseio.com) — the device writes
+              button/lat/lng at the root. A future second device would use its own
+              sub-path, e.g. .../vehicle2.
+            </p>
           </div>
 
           <Button type="submit" disabled={loading} className="mt-2">

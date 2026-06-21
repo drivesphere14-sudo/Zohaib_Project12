@@ -1,0 +1,217 @@
+.
+├── .DS_Store
+├── .env.example
+├── .env.local
+├── .gitignore
+├── app
+│   ├── .DS_Store
+│   ├── admin
+│   │   ├── .DS_Store
+│   │   ├── agreements
+│   │   │   └── page.tsx
+│   │   ├── bookings
+│   │   │   └── page.tsx
+│   │   ├── cnic-verification
+│   │   │   └── page.tsx
+│   │   ├── iot
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── tracking
+│   │   │   └── page.tsx
+│   │   └── vehicles
+│   │       └── page.tsx
+│   ├── api
+│   │   ├── .DS_Store
+│   │   ├── agreements
+│   │   │   ├── [id]
+│   │   │   │   ├── pdf
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── route.ts
+│   │   │   └── route.ts
+│   │   ├── bookings
+│   │   │   ├── [id]
+│   │   │   │   └── route.ts
+│   │   │   └── route.ts
+│   │   ├── iot
+│   │   │   └── route.ts
+│   │   ├── payments
+│   │   │   ├── .DS_Store
+│   │   │   ├── checkout
+│   │   │   │   └── route.ts
+│   │   │   └── webhook
+│   │   │       └── route.ts
+│   │   ├── profile
+│   │   │   └── route.ts
+│   │   ├── tracking
+│   │   │   └── route.ts
+│   │   └── vehicles
+│   │       ├── [id]
+│   │       │   └── route.ts
+│   │       └── route.ts
+│   ├── auth
+│   │   ├── .DS_Store
+│   │   ├── callback
+│   │   │   └── route.ts
+│   │   ├── error
+│   │   │   └── page.tsx
+│   │   ├── login
+│   │   │   └── page.tsx
+│   │   ├── owner-login
+│   │   │   └── page.tsx
+│   │   ├── sign-up
+│   │   │   └── page.tsx
+│   │   └── sign-up-success
+│   │       └── page.tsx
+│   ├── dashboard
+│   │   ├── .DS_Store
+│   │   ├── agreements
+│   │   │   └── page.tsx
+│   │   ├── bookings
+│   │   │   ├── confirm-payment
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── profile
+│   │   │   └── page.tsx
+│   │   ├── tracking
+│   │   │   └── page.tsx
+│   │   └── vehicles
+│   │       └── page.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components
+│   ├── admin
+│   │   ├── add-vehicle-dialog.tsx
+│   │   ├── admin-booking-actions.tsx
+│   │   ├── admin-sidebar.tsx
+│   │   ├── admin-vehicle-actions.tsx
+│   │   ├── approve-cnic-button.tsx
+│   │   ├── delete-booking-button.tsx
+│   │   ├── firebase-vehicle-monitor.tsx
+│   │   ├── iot-control-panel.tsx
+│   │   └── vehicle-firebase-viewer.tsx
+│   ├── auth
+│   │   └── password-toggle-input.tsx
+│   ├── components.json
+│   ├── dashboard
+│   │   ├── booking-form.tsx
+│   │   ├── cancel-booking-button.tsx
+│   │   ├── cnic-upload-section.tsx
+│   │   ├── dashboard-sidebar.tsx
+│   │   ├── generate-agreement-button.tsx
+│   │   ├── pay-booking-button.tsx
+│   │   ├── sign-agreement-button.tsx
+│   │   ├── track-vehicle-button.tsx
+│   │   ├── tracking-map.tsx
+│   │   └── vehicle-grid.tsx
+│   ├── landing
+│   │   ├── features-section.tsx
+│   │   ├── footer.tsx
+│   │   ├── hero-section.tsx
+│   │   ├── navbar.tsx
+│   │   └── stats-section.tsx
+│   ├── theme-provider.tsx
+│   └── ui
+│       ├── accordion.tsx
+│       ├── alert-dialog.tsx
+│       ├── alert.tsx
+│       ├── aspect-ratio.tsx
+│       ├── avatar.tsx
+│       ├── badge.tsx
+│       ├── breadcrumb.tsx
+│       ├── button-group.tsx
+│       ├── button.tsx
+│       ├── calendar.tsx
+│       ├── card.tsx
+│       ├── carousel.tsx
+│       ├── chart.tsx
+│       ├── checkbox.tsx
+│       ├── collapsible.tsx
+│       ├── command.tsx
+│       ├── context-menu.tsx
+│       ├── dialog.tsx
+│       ├── drawer.tsx
+│       ├── dropdown-menu.tsx
+│       ├── empty.tsx
+│       ├── field.tsx
+│       ├── form.tsx
+│       ├── hover-card.tsx
+│       ├── input-group.tsx
+│       ├── input-otp.tsx
+│       ├── input.tsx
+│       ├── item.tsx
+│       ├── kbd.tsx
+│       ├── label.tsx
+│       ├── menubar.tsx
+│       ├── navigation-menu.tsx
+│       ├── pagination.tsx
+│       ├── popover.tsx
+│       ├── progress.tsx
+│       ├── radio-group.tsx
+│       ├── resizable.tsx
+│       ├── scroll-area.tsx
+│       ├── select.tsx
+│       ├── separator.tsx
+│       ├── sheet.tsx
+│       ├── sidebar.tsx
+│       ├── skeleton.tsx
+│       ├── slider.tsx
+│       ├── sonner.tsx
+│       ├── spinner.tsx
+│       ├── switch.tsx
+│       ├── table.tsx
+│       ├── tabs.tsx
+│       ├── textarea.tsx
+│       ├── toast.tsx
+│       ├── toaster.tsx
+│       ├── toggle-group.tsx
+│       ├── toggle.tsx
+│       ├── tooltip.tsx
+│       ├── use-mobile.tsx
+│       └── use-toast.ts
+├── FIREBASE_INTEGRATION.md
+├── FIREBASE_URL_SETUP.md
+├── hooks
+│   ├── use-mobile.ts
+│   ├── use-toast.ts
+│   └── useVehicleData.ts
+├── lib
+│   ├── auth
+│   │   ├── requireAdmin.ts
+│   │   ├── session.ts
+│   │   └── types.ts
+│   ├── firebase
+│   │   ├── analytics.ts
+│   │   ├── client.ts
+│   │   └── iot-service.ts
+│   ├── supabase
+│   │   ├── client.ts
+│   │   ├── middleware.ts
+│   │   └── server.ts
+│   └── utils.ts
+├── middleware.ts
+├── migrations
+│   └── add_firebase_url_to_vehicles.sql
+├── next-env.d.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.mjs
+├── README.md
+├── scripts
+│   ├── 001_create_tables.sql
+│   ├── 002_admin_profile_trigger.sql
+│   ├── 003_create_first_admin.sql
+│   ├── 004_performance_indexes.sql
+│   ├── 005_reviews_cnic_payments.sql
+│   └── 006_demo_data.sql
+├── structure.txt
+├── styles
+│   └── globals.css
+└── tsconfig.json
+
+51 directories, 164 files

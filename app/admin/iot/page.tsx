@@ -1,23 +1,15 @@
 import { createClient } from "@/lib/supabase/server"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Wifi } from "lucide-react"
-import { IoTControlPanel } from "@/components/admin/iot-control-panel"
+import { VehicleTracker } from "@/components/iot/vehicle-tracker"
 
 export default async function IoTPage() {
   const supabase = await createClient()
 
-  const { data: vehicles } = await supabase
+  // Vehicles that have a Firebase location set -> show a live tracker for each.
+  const { data: trackedVehicles } = await supabase
     .from("vehicles")
-    .select("id, name, plate_number, status, iot_device_id")
-    .not("iot_device_id", "is", null)
+    .select("id, name, firebase_url")
+    .not("firebase_url", "is", null)
     .order("name")
-
-  const { data: recentCommands } = await supabase
-    .from("iot_commands")
-    .select("*, vehicles(name)")
-    .order("created_at", { ascending: false })
-    .limit(10)
 
   return (
     <div className="flex flex-col gap-8">
@@ -30,69 +22,29 @@ export default async function IoTPage() {
         </p>
       </div>
 
-      {!vehicles || vehicles.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-16">
-            <Wifi className="mb-4 h-12 w-12 text-muted-foreground/30" />
-            <p className="text-sm text-muted-foreground">
-              No vehicles with IoT devices. Add IoT device IDs to vehicles to
-              control them remotely.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <IoTControlPanel vehicles={vehicles} />
-      )}
+      {/* Live Firebase tracking + engine control (one card per vehicle) */}
+      <div className="flex flex-col gap-3">
+        <div>
+          <h2 className="font-serif text-lg font-bold text-foreground">
+            Live tracking &amp; engine control
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Real-time GPS and relay state read directly from Firebase.
+          </p>
+        </div>
 
-      {/* Command history */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-serif text-lg">
-            Recent IoT Commands
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {!recentCommands || recentCommands.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              No commands sent yet.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {recentCommands.map((cmd: any) => (
-                <div
-                  key={cmd.id}
-                  className="flex items-center justify-between rounded-lg border border-border p-3"
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <p className="text-sm font-medium text-card-foreground">
-                      {cmd.vehicles?.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(cmd.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="uppercase">
-                      {cmd.command}
-                    </Badge>
-                    <Badge
-                      variant={
-                        cmd.status === "acknowledged"
-                          ? "default"
-                          : cmd.status === "failed"
-                            ? "destructive"
-                            : "secondary"
-                      }
-                    >
-                      {cmd.status}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        {!trackedVehicles || trackedVehicles.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            No vehicle has a Firebase URL yet. Add one in the vehicle form to control it here.
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-4">
+            {trackedVehicles.map((v: any) => (
+              <VehicleTracker key={v.id} name={v.name} firebaseUrl={v.firebase_url} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

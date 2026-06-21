@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Car } from "lucide-react"
+import { Car, MapPin } from "lucide-react"
 import { AdminVehicleActions } from "@/components/admin/admin-vehicle-actions"
 import { AddVehicleDialog } from "@/components/admin/add-vehicle-dialog"
+import { VehicleFirebaseViewer } from "@/components/admin/vehicle-firebase-viewer"
 
 const statusColors: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   available: "default",
@@ -27,7 +28,7 @@ export default async function AdminVehiclesPage() {
             Vehicle Management
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Add, edit, and manage your fleet
+            Add, edit, and manage your fleet with Firebase GPS/IoT tracking
           </p>
         </div>
         <AddVehicleDialog />
@@ -47,7 +48,7 @@ export default async function AdminVehiclesPage() {
           {vehicles.map((vehicle: any) => (
             <Card key={vehicle.id}>
               <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-1">
                   <div className="h-16 w-16 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
                     {vehicle.image_url ? (
                       <img
@@ -59,8 +60,8 @@ export default async function AdminVehiclesPage() {
                       <Car className="h-8 w-8 text-muted-foreground/30" />
                     )}
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-3">
+                  <div className="flex flex-col gap-2 flex-1">
+                    <div className="flex items-center gap-3 flex-wrap">
                       <h3 className="font-serif text-lg font-bold text-card-foreground">
                         {vehicle.name}
                       </h3>
@@ -72,10 +73,12 @@ export default async function AdminVehiclesPage() {
                     <p className="text-xs text-muted-foreground">
                       {vehicle.plate_number} - ${vehicle.price_per_day}/day
                     </p>
-                    {vehicle.iot_device_id && (
-                      <p className="text-xs text-accent">
-                        IoT: {vehicle.iot_device_id}
-                      </p>
+                    {vehicle.firebase_url && (
+                      <VehicleFirebaseViewer
+                        vehicleId={vehicle.id}
+                        vehicleName={vehicle.name}
+                        firebaseUrl={vehicle.firebase_url}
+                      />
                     )}
                   </div>
                 </div>
