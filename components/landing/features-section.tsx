@@ -1,4 +1,4 @@
-import { ShieldCheck, Zap, LayoutDashboard, MapPin, BarChart3, Lock } from "lucide-react"
+timport { ShieldCheck, Zap, LayoutDashboard, MapPin, BarChart3, Lock } from "lucide-react"
 
 const darkFeatures = [
   {
