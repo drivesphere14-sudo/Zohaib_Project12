@@ -1,33 +1,26 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { PasswordToggleInput } from "@/components/auth/password-toggle-input"
 import { toast } from "sonner"
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [localLoading, setLocalLoading] = useState(false)
-
-  // Use combined loading state: either local or transition loading
-  const isLoading = localLoading || isPending
+  const [loading, setLoading] = useState(false)
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-    
-    // Prevent duplicate submissions
-    if (isLoading) return
-    
-    setLocalLoading(true)
+
+    if (loading) return
+
+    setLoading(true)
 
     try {
       const supabase = createClient()
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -35,17 +28,16 @@ export default function LoginPage() {
 
       if (error) {
         toast.error(error.message)
-        setLocalLoading(false)
+        setLoading(false)
         return
       }
 
       if (!data.user) {
         toast.error("Failed to authenticate")
-        setLocalLoading(false)
+        setLoading(false)
         return
       }
 
-      // Fetch profile ONCE to determine redirect
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("role")
@@ -53,79 +45,71 @@ export default function LoginPage() {
         .single()
 
       if (profileError) {
-        console.warn("[auth] Profile fetch error:", profileError)
+        console.error(profileError)
         toast.error("Failed to load user profile")
-        setLocalLoading(false)
+        setLoading(false)
         return
       }
 
-      // Single redirect based on role (no duplicate redirects)
-      const destination = profile?.role === "admin" ? "/admin" : "/dashboard"
-      
-      // Use startTransition for redirect to prevent loading state issues
-      startTransition(() => {
-        router.replace(destination)
-      })
+      const destination =
+        profile?.role === "admin" ? "/admin" : "/dashboard"
+
+      // Force full page reload so auth cookies are read correctly
+      window.location.href = destination
     } catch (err) {
-      console.error("[auth] Login error:", err)
+      console.error(err)
       toast.error("An unexpected error occurred")
-      setLocalLoading(false)
+      setLoading(false)
     }
   }
 
   return (
     <div className="relative flex min-h-screen items-center justify-center">
-      {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/images/login-bg.jpg')" }}
-        aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-foreground/40" aria-hidden="true" />
+      <div className="absolute inset-0 bg-black/40" />
 
-      {/* Login card */}
       <div className="relative z-10 mx-4 w-full max-w-md rounded-2xl bg-card p-10 shadow-2xl">
-        {/* Back to home button */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-accent transition-colors mb-6 group"
+          className="mb-6 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-accent"
         >
-          <svg className="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to Home
+          ← Back to Home
         </Link>
 
-        <h1 className="font-serif text-3xl font-bold text-card-foreground italic">
+        <h1 className="font-serif text-3xl font-bold italic">
           Sign In
         </h1>
+
         <p className="mt-2 text-sm text-muted-foreground">
           Welcome back to Drive Sphere
         </p>
 
         <form onSubmit={handleLogin} className="mt-8 flex flex-col gap-5">
-          <div className="flex flex-col gap-2">
+          <div>
             <label
               htmlFor="email"
-              className="text-sm font-semibold text-card-foreground"
+              className="mb-2 block text-sm font-semibold"
             >
               Email
             </label>
+
             <input
               id="email"
               type="email"
-              placeholder="your@email.com"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
-              className="rounded-lg border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-lg border border-input bg-background px-4 py-3"
             />
           </div>
 
           <PasswordToggleInput
             id="password"
-            placeholder="••••••••"
             label="Password"
+            placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -133,20 +117,21 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="mt-2 rounded-lg bg-primary py-3.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading}
+            className="rounded-lg bg-primary py-3 font-semibold text-primary-foreground disabled:opacity-50"
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            {"Don't have an account?"}
+            Don't have an account?
           </p>
+
           <Link
             href="/auth/sign-up"
-            className="mt-1 inline-block text-sm font-bold text-card-foreground hover:text-accent transition-colors"
+            className="mt-1 inline-block text-sm font-bold hover:text-accent"
           >
             Create an Account
           </Link>
