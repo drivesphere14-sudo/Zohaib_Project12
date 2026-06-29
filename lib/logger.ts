@@ -5,7 +5,7 @@ interface LogContext {
   userId?: string
   email?: string
   endpoint?: string
-  duration?: number
+  duration?: number | string
   [key: string]: any
 }
 
