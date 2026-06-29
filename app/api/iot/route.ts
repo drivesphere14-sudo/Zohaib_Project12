@@ -8,12 +8,12 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/requireAdmin";
+import { requireAdminAPI } from "@/lib/auth/requireAdmin";
 import { setRelay, getRelayState, getGPSOnce } from "@/lib/firebase/iot-service";
 
 // ── GET — read current IoT state snapshot ────────────────────────────────────
 export async function GET(req: NextRequest) {
-  const authError = await requireAdmin(req);
+  const authError = await requireAdminAPI(req);
   if (authError) return authError;
 
   const [relay, gps] = await Promise.all([getRelayState(), getGPSOnce()]);
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 
 // ── POST — set relay ──────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
-  const authError = await requireAdmin(req);
+  const authError = await requireAdminAPI(req);
   if (authError) return authError;
 
   const body = await req.json().catch(() => null);

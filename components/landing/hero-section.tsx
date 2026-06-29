@@ -32,36 +32,20 @@ export function HeroSection() {
           precision and seamless IoT technology.
         </p>
 
-        {/* Portal cards */}
-        <div className="mt-16 grid gap-6 md:grid-cols-2 max-w-2xl mx-auto">
+        {/* Single login entry */}
+        <div className="mt-16 mx-auto max-w-xl">
           <Link
-            href="/auth/login?role=customer"
-            className="group relative rounded-xl border border-border bg-card/80 backdrop-blur-sm px-8 py-10 text-left transition-all hover:shadow-lg hover:border-accent/30"
+            href="/auth/login"
+            className="group relative block rounded-xl border border-border bg-card/80 backdrop-blur-sm px-8 py-10 text-left transition-all hover:shadow-lg hover:border-accent/30"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Portal Alpha
+              Portal
             </p>
             <h3 className="mt-3 font-serif text-2xl font-bold text-card-foreground">
-              For the Renter
+              Sign in to your account
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Browse vehicles, make bookings, and track your rides.
-            </p>
-            <ArrowRight className="mt-4 h-5 w-5 text-accent opacity-0 transition-opacity group-hover:opacity-100" />
-          </Link>
-
-          <Link
-            href="/auth/login?role=admin"
-            className="group relative rounded-xl border border-border bg-card/80 backdrop-blur-sm px-8 py-10 text-left transition-all hover:shadow-lg hover:border-accent/30"
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Portal Beta
-            </p>
-            <h3 className="mt-3 font-serif text-2xl font-bold text-card-foreground">
-              For the Owner
-            </h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Manage fleet, control IoT devices, and view analytics.
+              Access your dashboard after a single sign-in, whether you’re a renter or an owner.
             </p>
             <ArrowRight className="mt-4 h-5 w-5 text-accent opacity-0 transition-opacity group-hover:opacity-100" />
           </Link>

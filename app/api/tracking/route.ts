@@ -8,11 +8,11 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/requireAdmin";
+import { requireAdminAPI } from "@/lib/auth/requireAdmin";
 import { getGPSOnce } from "@/lib/firebase/iot-service";
 
 export async function GET(req: NextRequest) {
-  const authError = await requireAdmin(req);
+  const authError = await requireAdminAPI(req);
   if (authError) return authError;
 
   const gps = await getGPSOnce();
