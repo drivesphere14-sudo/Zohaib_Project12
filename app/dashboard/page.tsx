@@ -7,12 +7,19 @@ import Link from "next/link"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // Safely get user to avoid runtime errors if shape differs in production
+  const _getUser = await supabase.auth.getUser()
+  const user = _getUser?.data?.user ?? null
 
-  // Guard: no user → back to login (covers cookie/session gap in production)
-  if (!user) {
+  // Guard: no user or missing id → back to login (covers cookie/session gap in production)
+  if (!user || !user.id) {
+    try {
+      // Log the unexpected auth shape for debugging in production
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { logger } = require("@/lib/logger")
+      logger.warn("Redirecting to login - missing user or id", { getUser: _getUser })
+    } catch {}
+
     redirect("/auth/login")
   }
 

@@ -28,7 +28,17 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // Safely fetch user — avoid destructuring when `data` may be null
+  const _getUser = await supabase.auth.getUser()
+  const user = _getUser?.data?.user ?? null
+  // Log unexpected shape for debugging in production logs
+  if (!user) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { logger } = require("@/lib/logger")
+      logger.warn("No authenticated user in middleware", { getUser: _getUser })
+    } catch {}
+  }
 
   const isAdminRoute     = pathname.startsWith("/admin")
   const isDashboardRoute = pathname.startsWith("/dashboard")
