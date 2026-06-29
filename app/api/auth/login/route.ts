@@ -53,6 +53,12 @@ export async function POST(request: NextRequest) {
     })
 
     if (error) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { logger } = require("@/lib/logger")
+        logger.warn("Auth error during signInWithPassword", { error: error.message })
+      } catch {}
+
       console.error("Auth error:", error)
       return NextResponse.json(
         { error: error.message || "Failed to authenticate" },
@@ -97,6 +103,14 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
+
+    // Log cookie metadata (names/options) to help debug set-cookie behavior in Vercel
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { logger } = require("@/lib/logger")
+      const cookieMeta = cookiesToSet.map((c) => ({ name: c.name, options: c.options }))
+      logger.info("Login success, cookies to set", { cookieMeta, userId: data.user.id })
+    } catch {}
 
     const response = NextResponse.json({ role: profile.role }, { status: 200 })
 
