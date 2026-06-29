@@ -2,18 +2,20 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { PasswordToggleInput } from "@/components/auth/password-toggle-input"
 import { toast } from "sonner"
 
 export default function LoginPage() {
+  const router = useRouter()
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-
     if (loading) return
 
     setLoading(true)
@@ -38,27 +40,32 @@ export default function LoginPage() {
         return
       }
 
+      // Get role from DB
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", data.user.id)
         .single()
 
-      if (profileError) {
-        console.error(profileError)
+      if (profileError || !profile) {
         toast.error("Failed to load user profile")
         setLoading(false)
         return
       }
 
       const destination =
-        profile?.role === "admin" ? "/admin" : "/dashboard"
+        profile.role === "admin" ? "/admin" : "/dashboard"
 
-      // Force full page reload so auth cookies are read correctly
-      window.location.href = destination
+      toast.success("Login successful")
+
+      // ✅ IMPORTANT: use router instead of full reload
+      router.push(destination)
+      router.refresh()
     } catch (err) {
       console.error(err)
       toast.error("An unexpected error occurred")
+      setLoading(false)
+    } finally {
       setLoading(false)
     }
   }
@@ -89,15 +96,11 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="mt-8 flex flex-col gap-5">
           <div>
-            <label
-              htmlFor="email"
-              className="mb-2 block text-sm font-semibold"
-            >
+            <label className="mb-2 block text-sm font-semibold">
               Email
             </label>
 
             <input
-              id="email"
               type="email"
               required
               value={email}
