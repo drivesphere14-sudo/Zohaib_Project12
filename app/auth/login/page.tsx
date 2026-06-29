@@ -15,7 +15,15 @@ export default function LoginPage() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+    
+    // Prevent multiple submissions
     if (loading) return
+    
+    // Validate inputs
+    if (!email || !password) {
+      toast.error("Please enter both email and password")
+      return
+    }
 
     setLoading(true)
 
@@ -26,23 +34,31 @@ export default function LoginPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        cache: "no-store",
       })
 
       const result = await response.json()
 
       if (!response.ok) {
         toast.error(result.error || "Failed to authenticate")
+        setLoading(false)
+        return
+      }
+
+      if (!result.role) {
+        toast.error("Invalid user role")
+        setLoading(false)
         return
       }
 
       const destination = result.role === "admin" ? "/admin" : "/dashboard"
-
       toast.success("Login successful")
-      await router.push(destination)
+      
+      // Use replace instead of push to prevent back navigation to login
+      router.replace(destination)
     } catch (err) {
-      console.error(err)
+      console.error("Login error:", err)
       toast.error("An unexpected error occurred")
-    } finally {
       setLoading(false)
     }
   }

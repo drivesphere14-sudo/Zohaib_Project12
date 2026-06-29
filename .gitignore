@@ -3,33 +3,67 @@ __v0_runtime_loader.js
 __v0_devtools.tsx
 __v0_jsx-dev-runtime.ts
 
-# Common ignores
+# Build & Runtime
 node_modules/
 .next/
-package-lock.json
-.env*.local
-.DS_Store
 out/
 dist/
 build/
-coverage/
-/.pnp
-/.pnp.js
-env.local
+.vercel
+/.cache
+.parcel-cache
+tsconfig.tsbuildinfo
+
+# Environment variables (NEVER COMMIT)
+.env
 .env.local
 .env.*.local
-/.idea/
-/.vscode/
+.env.production.local
+
+# Dependencies lock files (use one or the other)
+package-lock.json
+yarn.lock
+# Note: pnpm-lock.yaml is committed for this project
+
+# Logs & Debugging
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-lock.yaml
-yarn.lock
+pnpm-debug.log*
 logs
 *.log
 *.tgz
-/.vercel
-/.firebase
-/.cache
-/.expo
-.parcel-cachetsconfig.tsbuildinfo
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.env.*.swp
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output
+
+# Firebase
+.firebase
+.firebaserc
+
+# Optional npm cache
+.npm
+
+# Optional pnp (Yarn)
+/.pnp
+/.pnp.js
+
+# Sentry
+.sentry-release
+.sentryclirc

@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    turbo: {},
-  },
   images: {
     remotePatterns: [
       {
@@ -10,6 +7,14 @@ const nextConfig = {
         hostname: "**",
       },
     ],
+  },
+  // Optimization settings for production
+  compress: true,
+  poweredByHeader: false,
+  productionBrowserSourceMaps: false,
+  // Turbopack configuration (Next.js 16+)
+  turbopack: {
+    root: "/Users/zohaib/Desktop/Zohaib_Project12",
   },
 }
 
