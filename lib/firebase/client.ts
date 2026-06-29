@@ -5,6 +5,7 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app"
 import { getDatabase, type Database } from "firebase/database"
 import { getAuth, type Auth } from "firebase/auth"
+import { getAnalytics, type Analytics } from "firebase/analytics"
 
 const firebaseConfig = {
   apiKey: "AIzaSyCOTpk7sDHx5Fhqa1-HUe8wnN_n5cVy7p8",
@@ -26,5 +27,29 @@ export function getFirebaseApp(): FirebaseApp {
 
 export const database: Database = getDatabase(app)
 export const auth: Auth = getAuth(app)
+
+export function isFirebaseAvailable(): boolean {
+  return typeof window !== "undefined" && Boolean(firebaseConfig.projectId)
+}
+
+export function getFirebaseDatabase(): Database | null {
+  return isFirebaseAvailable() ? database : null
+}
+
+let analyticsInstance: Analytics | null = null
+
+export function getFirebaseAnalytics(): Analytics | null {
+  if (!isFirebaseAvailable()) return null
+
+  if (!analyticsInstance) {
+    try {
+      analyticsInstance = getAnalytics(app)
+    } catch {
+      return null
+    }
+  }
+
+  return analyticsInstance
+}
 
 export default app
