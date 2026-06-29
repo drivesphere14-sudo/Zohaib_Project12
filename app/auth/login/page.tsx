@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
 import { PasswordToggleInput } from "@/components/auth/password-toggle-input"
 import { toast } from "sonner"
 
@@ -21,50 +20,28 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const supabase = createClient()
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       })
 
-      if (error) {
-        toast.error(error.message)
-        setLoading(false)
+      const result = await response.json()
+
+      if (!response.ok) {
+        toast.error(result.error || "Failed to authenticate")
         return
       }
 
-      if (!data.user) {
-        toast.error("Failed to authenticate")
-        setLoading(false)
-        return
-      }
-
-      // Get role from DB
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", data.user.id)
-        .single()
-
-      if (profileError || !profile) {
-        toast.error("Failed to load user profile")
-        setLoading(false)
-        return
-      }
-
-      const destination =
-        profile.role === "admin" ? "/admin" : "/dashboard"
+      const destination = result.role === "admin" ? "/admin" : "/dashboard"
 
       toast.success("Login successful")
-
-      // ✅ IMPORTANT: use router instead of full reload
-      router.push(destination)
-      router.refresh()
+      await router.push(destination)
     } catch (err) {
       console.error(err)
       toast.error("An unexpected error occurred")
-      setLoading(false)
     } finally {
       setLoading(false)
     }
